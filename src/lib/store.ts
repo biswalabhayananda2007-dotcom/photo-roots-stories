@@ -1,5 +1,5 @@
 // Lightweight global store for Ancestra AI mock data.
-// TODO: Replace with Supabase persistence (auth.users, photos, people, relationships, stories).
+// Auth is handled by Supabase; this store holds local UI/photo data.
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -41,8 +41,7 @@ type State = {
   people: Person[];
   relationships: Relationship[];
   stories: Story[];
-  signup: (name: string, email: string) => void;
-  login: (email: string) => void;
+  setUser: (u: AuthUser) => void;
   logout: () => void;
   addPhoto: (url: string) => void;
   removePhoto: (id: string) => void;
@@ -67,8 +66,7 @@ export const useStore = create<State>()(
       people: [],
       relationships: [],
       stories: [],
-      signup: (name, email) => set({ user: { name, email } }),
-      login: (email) => set({ user: { name: email.split("@")[0], email } }),
+      setUser: (user) => set({ user }),
       logout: () => set({ user: null }),
       addPhoto: (url) =>
         set((s) => ({ photos: [{ id: uid(), url, taggedPeopleIds: [], createdAt: Date.now() }, ...s.photos] })),
@@ -100,6 +98,6 @@ export const useStore = create<State>()(
         set((s) => ({ stories: s.stories.map((x) => (x.id === id ? { ...x, ...s2 } : x)) })),
       removeStory: (id) => set((s) => ({ stories: s.stories.filter((x) => x.id !== id) })),
     }),
-    { name: "ancestra-store" },
+    { name: "ancestra-store", partialize: (s) => ({ photos: s.photos, people: s.people, relationships: s.relationships, stories: s.stories }) },
   ),
 );
