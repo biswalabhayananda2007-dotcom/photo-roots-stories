@@ -11,13 +11,14 @@ import { StoriesPanel } from "@/components/dashboard/StoriesPanel";
 import { MembersPanel } from "@/components/dashboard/MembersPanel";
 import { supabase } from "@/integrations/supabase/client";
 
-type Section = "photos" | "people" | "tree" | "stories";
+type Section = "photos" | "people" | "tree" | "stories" | "members";
 
 const items: { id: Section; label: string; icon: typeof ImagePlus }[] = [
   { id: "photos", label: "Upload Photos", icon: ImagePlus },
   { id: "people", label: "People", icon: Users },
   { id: "tree", label: "Family Tree", icon: GitBranch },
   { id: "stories", label: "Stories", icon: BookOpen },
+  { id: "members", label: "Members", icon: Users },
 ];
 
 const Dashboard = () => {
