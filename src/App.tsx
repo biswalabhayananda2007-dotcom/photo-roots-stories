@@ -8,8 +8,14 @@ import Index from "./pages/Index.tsx";
 import Auth from "./pages/Auth.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { useAuthSession } from "./hooks/useAuthSession";
 
 const queryClient = new QueryClient();
+
+const AuthBoundary = ({ children }: { children: React.ReactNode }) => {
+  useAuthSession();
+  return <>{children}</>;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -17,6 +23,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <AuthBoundary>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
