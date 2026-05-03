@@ -19,7 +19,7 @@ const items: { id: Section; label: string; icon: typeof ImagePlus }[] = [
 ];
 
 const Dashboard = () => {
-  const { user, logout, photos, people, stories } = useStore();
+  const { user, photos, people, stories } = useStore();
   const nav = useNavigate();
   const [section, setSection] = useState<Section>("photos");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -80,7 +80,7 @@ const Dashboard = () => {
             <p className="text-sm font-medium truncate">{user.name}</p>
             <p className="text-xs text-muted-foreground truncate">{user.email}</p>
           </div>
-          <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => { logout(); nav("/"); }}>
+          <Button variant="ghost" size="sm" className="w-full justify-start" onClick={async () => { await supabase.auth.signOut(); nav("/"); }}>
             <LogOut className="h-4 w-4 mr-2" /> Log out
           </Button>
         </div>

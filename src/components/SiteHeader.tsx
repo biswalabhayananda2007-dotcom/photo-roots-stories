@@ -29,7 +29,7 @@ export const SiteHeader = () => {
           {user ? (
             <>
               <Button variant="ghost" onClick={() => nav("/dashboard")}>Dashboard</Button>
-              <Button variant="outline" onClick={() => { logout(); nav("/"); }}>Log out</Button>
+              <Button variant="outline" onClick={handleLogout}>Log out</Button>
             </>
           ) : (
             <>
