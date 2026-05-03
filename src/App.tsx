@@ -23,14 +23,15 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <AuthBoundary>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AuthBoundary>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthBoundary>
         </BrowserRouter>
       </TooltipProvider>
     </ThemeProvider>
