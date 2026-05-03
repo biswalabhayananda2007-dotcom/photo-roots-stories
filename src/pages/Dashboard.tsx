@@ -8,6 +8,8 @@ import { PhotosPanel } from "@/components/dashboard/PhotosPanel";
 import { PeoplePanel } from "@/components/dashboard/PeoplePanel";
 import { FamilyTreePanel } from "@/components/dashboard/FamilyTreePanel";
 import { StoriesPanel } from "@/components/dashboard/StoriesPanel";
+import { MembersPanel } from "@/components/dashboard/MembersPanel";
+import { supabase } from "@/integrations/supabase/client";
 
 type Section = "photos" | "people" | "tree" | "stories";
 
