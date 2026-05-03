@@ -8,18 +8,21 @@ import { PhotosPanel } from "@/components/dashboard/PhotosPanel";
 import { PeoplePanel } from "@/components/dashboard/PeoplePanel";
 import { FamilyTreePanel } from "@/components/dashboard/FamilyTreePanel";
 import { StoriesPanel } from "@/components/dashboard/StoriesPanel";
+import { MembersPanel } from "@/components/dashboard/MembersPanel";
+import { supabase } from "@/integrations/supabase/client";
 
-type Section = "photos" | "people" | "tree" | "stories";
+type Section = "photos" | "people" | "tree" | "stories" | "members";
 
 const items: { id: Section; label: string; icon: typeof ImagePlus }[] = [
   { id: "photos", label: "Upload Photos", icon: ImagePlus },
   { id: "people", label: "People", icon: Users },
   { id: "tree", label: "Family Tree", icon: GitBranch },
   { id: "stories", label: "Stories", icon: BookOpen },
+  { id: "members", label: "Members", icon: Users },
 ];
 
 const Dashboard = () => {
-  const { user, logout, photos, people, stories } = useStore();
+  const { user, photos, people, stories } = useStore();
   const nav = useNavigate();
   const [section, setSection] = useState<Section>("photos");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -80,7 +83,7 @@ const Dashboard = () => {
             <p className="text-sm font-medium truncate">{user.name}</p>
             <p className="text-xs text-muted-foreground truncate">{user.email}</p>
           </div>
-          <Button variant="ghost" size="sm" className="w-full justify-start" onClick={() => { logout(); nav("/"); }}>
+          <Button variant="ghost" size="sm" className="w-full justify-start" onClick={async () => { await supabase.auth.signOut(); nav("/"); }}>
             <LogOut className="h-4 w-4 mr-2" /> Log out
           </Button>
         </div>
@@ -107,6 +110,7 @@ const Dashboard = () => {
           {section === "people" && <PeoplePanel />}
           {section === "tree" && <FamilyTreePanel />}
           {section === "stories" && <StoriesPanel />}
+          {section === "members" && <MembersPanel />}
         </main>
       </div>
     </div>

@@ -3,10 +3,10 @@ import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { useStore } from "@/lib/store";
 import { toast } from "sonner";
 import { Sparkles } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { supabase } from "@/integrations/supabase/client";
 
 const Auth = () => {
   const [params] = useSearchParams();
@@ -16,24 +16,40 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
-  const { signup, login } = useStore();
+  const [loading, setLoading] = useState(false);
   const nav = useNavigate();
 
-  // TODO: Wire to Supabase auth.signUp / signInWithPassword once Lovable Cloud is enabled.
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !pw) return toast.error("Please fill all fields");
-    if (mode === "signup") {
-      if (!name) return toast.error("Name is required");
-      if (pw.length < 6) return toast.error("Password must be 6+ characters");
-      if (pw !== pw2) return toast.error("Passwords don't match");
-      signup(name, email);
-      toast.success(`Welcome, ${name.split(" ")[0]}!`);
-    } else {
-      login(email);
-      toast.success("Welcome back!");
+    setLoading(true);
+    try {
+      if (mode === "signup") {
+        if (!name) return toast.error("Name is required");
+        if (pw.length < 6) return toast.error("Password must be 6+ characters");
+        if (pw !== pw2) return toast.error("Passwords don't match");
+        const { error } = await supabase.auth.signUp({
+          email,
+          password: pw,
+          options: {
+            emailRedirectTo: `${window.location.origin}/dashboard`,
+            data: { name },
+          },
+        });
+        if (error) throw error;
+        toast.success(`Welcome, ${name.split(" ")[0]}! Account created.`);
+        nav("/dashboard");
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
+        if (error) throw error;
+        toast.success("Welcome back!");
+        nav("/dashboard");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Authentication failed");
+    } finally {
+      setLoading(false);
     }
-    nav("/dashboard");
   };
 
   return (
@@ -110,8 +126,8 @@ const Auth = () => {
                   <Input id="pw2" type="password" value={pw2} onChange={(e) => setPw2(e.target.value)} placeholder="••••••••" className="mt-1.5" />
                 </div>
               )}
-              <Button type="submit" className="w-full bg-gradient-primary hover:opacity-90 h-11">
-                {mode === "login" ? "Log in" : "Create account"}
+              <Button type="submit" disabled={loading} className="w-full bg-gradient-primary hover:opacity-90 h-11">
+                {loading ? "Please wait..." : mode === "login" ? "Log in" : "Create account"}
               </Button>
             </form>
 

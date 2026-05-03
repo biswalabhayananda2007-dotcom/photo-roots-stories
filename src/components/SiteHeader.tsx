@@ -2,12 +2,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { useStore } from "@/lib/store";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 
 export const SiteHeader = () => {
   const user = useStore((s) => s.user);
-  const logout = useStore((s) => s.logout);
   const nav = useNavigate();
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    nav("/");
+  };
   return (
     <header className="sticky top-0 z-50 glass border-b border-border/50">
       <div className="container flex h-16 items-center justify-between">
@@ -25,7 +29,7 @@ export const SiteHeader = () => {
           {user ? (
             <>
               <Button variant="ghost" onClick={() => nav("/dashboard")}>Dashboard</Button>
-              <Button variant="outline" onClick={() => { logout(); nav("/"); }}>Log out</Button>
+              <Button variant="outline" onClick={handleLogout}>Log out</Button>
             </>
           ) : (
             <>
