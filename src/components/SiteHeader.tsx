@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
-import { Sparkles } from "lucide-react";
 import { useStore } from "@/lib/store";
+import logo from "@/assets/logo.png";
 
 export const SiteHeader = () => {
   const user = useStore((s) => s.user);
@@ -12,12 +12,7 @@ export const SiteHeader = () => {
     <header className="sticky top-0 z-50 glass border-b border-border/50">
       <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-primary rounded-lg blur-md opacity-60 group-hover:opacity-100 transition-opacity" />
-            <div className="relative bg-gradient-primary text-primary-foreground h-9 w-9 rounded-lg flex items-center justify-center">
-              <Sparkles className="h-5 w-5" />
-            </div>
-          </div>
+          <img src={logo} alt="Ancestra AI logo" className="h-9 w-9 object-contain" />
           <span className="font-display text-xl font-semibold tracking-tight">Ancestra<span className="text-primary">.</span></span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
