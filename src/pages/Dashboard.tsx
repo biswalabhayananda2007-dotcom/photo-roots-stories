@@ -110,6 +110,7 @@ const Dashboard = () => {
           {section === "people" && <PeoplePanel />}
           {section === "tree" && <FamilyTreePanel />}
           {section === "stories" && <StoriesPanel />}
+          {section === "members" && <MembersPanel />}
         </main>
       </div>
     </div>
